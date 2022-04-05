@@ -151,32 +151,8 @@ class Interface(tk.Tk):
         nit_default.set("10")
         self.nit_input = tk.Spinbox(self.framenit, from_=10, to=100000,textvariable=nit_default)
         self.nit_input.pack(side = "bottom")
-        #CHOIX IA
-        self.frameIA = tk.Frame(self.Main_Frame)
-        self.frameIA.pack(side = "top")
-        labelw = tk.Label(self.frameIA,
-                    text = "Entrez l'IA'  :  ",
-                    font = ("Times New Roman", 10), 
-                    padx = 0, pady = 0, bg = "white")
-        labelw.pack(side = "left")
-        self.IA_input_variable = tk.StringVar(self)
-        self.IA_input_variable.set("Sandbox")
-        self.IA_menu_deroulant=tk.OptionMenu(self.frameIA , self.IA_input_variable, "MCTS","Sandbox")
-        self.IA_menu_deroulant.config(bg='green', width=8, height=1)
-        self.IA_menu_deroulant.pack(side = "left")
-        #CHOIX joueur
-        self.frameIA = tk.Frame(self.Main_Frame)
-        self.frameIA.pack(side = "top")
-        labelw = tk.Label(self.frameIA,
-                    text = "Entrez l'IA'  :  ",
-                    font = ("Times New Roman", 10), 
-                    padx = 0, pady = 0, bg = "white")
-        labelw.pack(side = "left")
-        self.player_input_variable = tk.StringVar(self)
-        self.player_input_variable.set("R")
-        self.player_menu_deroulant=tk.OptionMenu(self.frameIA , self.player_input_variable, "R","B")
-        self.player_menu_deroulant.config(bg='green', width=8, height=1)
-        self.player_menu_deroulant.pack(side = "left")
+
+
         
         #BOUTON JOUER
         playbutton = tk.Button(self.Main_Frame, text = "Jouer", command = self.jouer, bg = "red", width = 10, height = 1)
@@ -189,8 +165,7 @@ class Interface(tk.Tk):
         self.w = int(self.width_input.get())
         self.profondeur = int(self.profondeur_input.get()) #profondeur minmax
         self.mctsnit = int(self.nit_input.get())
-        self.IA_mode = self.IA_input_variable.get() #sandbox ou MCTS
-        self.human_player = self.player_input_variable.get()
+        self.IA_mode = "Sandbox" #Sandbox ou MCTS
         print("Prof : ",self.profondeur, " MCTS it : ", self.mctsnit )
         self.initgame()
         
@@ -563,7 +538,7 @@ class Interface(tk.Tk):
         h = self.h
         if h == 4 and w == 4:
             modelX = tf.keras.models.load_model("DQL44\Dense_bon\modelX")
-            modelO = tf.keras.models.load_model("temp44O")
+            modelO = tf.keras.models.load_model("DQL44\temp44O")
             #modelX = tf.keras.models.load_model("DQL44\Dense_2\modelX")
             #modelO = tf.keras.models.load_model("DQL44\Dense_2\modelO")
         elif h == 6 and w == 7:

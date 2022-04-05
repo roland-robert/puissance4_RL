@@ -1,0 +1,50 @@
+Trained 200 000 games against minmax profondeur 2 (Only player red trained)
+Time for training : 5h30m (about 100s/1000 games)
+PARAMETERS /////////////////////////////////////
+        self.lr = 0.01
+        self.Qlr = 0
+        self.gamma = 0.9
+
+        self.eps = 0.9 #randomness
+        self.min_eps = 0.9
+        self.decay = 0.1
+
+        self.loss = tf.keras.losses.MeanSquaredError()
+        #self.loss = tf.keras.losses.Huber()
+        self.metric=tf.keras.metrics.MeanSquaredError()
+        self.intermediate_activation = "relu"
+        self.end_activation = "linear"
+        self.maxmemlen = 20000 #memoire maxi des coups (useless dans la V3)
+        #self.train_interval = 20 #etapes avant entrainement (etape = 1 coup)
+        self.games_before_train = 1
+        self.allow_illegal_moves = False
+
+        #self.MIN_REPLAY_SIZE = 500
+        self.batch_size = 16
+        self.sample_size = 256
+
+MODEL /////////////////////////////////////////////////
+            self.model = Sequential()
+            self.model.add(layers.Conv2D(128, (4, 4), activation='relu', input_shape=(h, w, 1),
+                  kernel_initializer=tf.keras.initializers.GlorotUniform(),
+                  bias_initializer=tf.keras.initializers.Zeros()))
+            self.model.add(layers.Flatten())
+            self.model.add(layers.Dense(units = 64, activation = 'sigmoid', 
+                  kernel_initializer=tf.keras.initializers.GlorotUniform(),
+                  bias_initializer=tf.keras.initializers.Zeros()))
+            self.model.add(layers.Dense(units = 64, activation = 'relu', 
+                  kernel_initializer=tf.keras.initializers.GlorotUniform(),
+                  bias_initializer=tf.keras.initializers.Zeros()))
+            self.model.add(layers.Dense(units = w))
+
+            self.model.compile(optimizer = tf.keras.optimizers.SGD(learning_rate=self.hpp.lr), 
+                   loss = self.hpp.loss,
+                   metrics=[tf.keras.metrics.MeanSquaredError()])
+        
+            self.model.compile(optimizer = self.hpp.optimizer, 
+                   loss = self.hpp.loss,
+                   metrics=[tf.keras.metrics.MeanSquaredError()])
+
+
+RESULTS
+

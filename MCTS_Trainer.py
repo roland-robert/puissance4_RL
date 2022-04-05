@@ -384,52 +384,8 @@ class MCTS_trainer:
                     print("Moves : ", moves)
 
         return wins/n, losses/n, draws/n
-    def test_against_MCTS(self, player = 1, MCTSnit = 1000, NNMCTSnit = 100, ntest = 10):
-        self.n_iteration = NNMCTSnit
-        wins = 0
-        losses = 0
-        draws = 0
-        
-        for i in range(ntest):
-            moves = [] #historique des coups
-            game = Game(self.h, self.w, profondeur_max = pmax)
-            while not(game.is_game_over):
-                turn = game.turn
-                #jouer le coup
-                if turn == player:
-                    #get state and move for DQN
-                    move = self.get_move(game)
-                    #play move
-                    winner = game.play_move(move)
-                else:
-                    mcts = MCTS(h=self.h, w = self.w, game = game, n_iteration = MCTSnit)
-                    move, movevaldic= mcts.do_process()
-                    winner = game.play_move(move)
-                moves.append(move)
-                #verif du gagnant
-                if winner == player:
-                    wins += 1
-                    print("Moves : ", moves)
-                elif winner == -player:
-                    losses += 1
-                    print("Moves : ", moves)
-                elif winner == 0: #draw
-                    draws += 1
-                    print("Moves : ", moves)
 
-        return wins/ntest, losses/ntest, draws/ntest
-    def fit_batch(self, file_name = 'sample44_5000_0.pkl', minibatch_size = 10, ntimes = 1):
-        #open file to update the batch
-        open_file = open(file_name, "rb")
-        batch = pickle.load(open_file)
-        open_file.close()
 
-        states = np.array(batch[0])
-        policies = np.array(batch[1])
-        values = np.array(batch[2])
-        for i in range(ntimes):
-            self.policynet.model.fit(states, policies, batch_size = minibatch_size, shuffle = True)
-            self.valuenet.model.fit(states, values, batch_size = minibatch_size, shuffle = True)
     
     def get_new_root_node(self,move,NNmcts):
         #returns new rootnode for move if existant, 0 else
@@ -451,26 +407,12 @@ if __name__ == "__main__":
     w = 7
     n_iteration = 100
 
-
-    ntimes = 1
-    minbatchsize = 100
-
-    file_name = 'batchTOT_sans_doub67_10000_0.pkl'
-
-    #modelP = tf.keras.models.load_model("policy_crossentropy3"  + str(h) + str(w))
-    #modelV = tf.keras.models.load_model("value_crossentropy3" + str(h) + str(w))
-    #trainer = MCTS_trainer(h = h, w = w, n_iteration = n_iteration, modelP=modelP, modelV=modelV)
-    #trainer.fit_batch(file_name=file_name, minibatch_size=10,  ntimes = ntimes)
-    
-    #trainer.policynet.model.save("policy_crossentropy3" + str(h) + str(w))
-    #trainer.valuenet.model.save("value_crossentropy3" + str(h) + str(w))
-
     modelP = tf.keras.models.load_model("policy_crossentropy3"  + str(h) + str(w))
     modelV = tf.keras.models.load_model("value_crossentropy3" + str(h) + str(w))
 
     trainer = MCTS_trainer(h = h, w = w, n_iteration = n_iteration, modelP = modelP, modelV=modelV)
-    ntrain = 100
-    trainer.train_mcts_guided(ntrain)
+    ntrain = 0
+    trainer.self_train(ntrain)
 
     ntest = 10
     pmax = 5

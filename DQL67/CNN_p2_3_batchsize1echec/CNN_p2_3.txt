@@ -1,0 +1,59 @@
+105 000 poids, 30 000 training / joueur, 770s/training (pour les deux joueurs)
+
+avg The CPU usage is :  15.5
+The CPU usage is:  51.6
+RAM memory % used: 68.5
+
+class Hyperparameters:
+    def __init__(self):
+        self.lr = 0.01
+        self.Qlr = 0
+        self.gamma = 0.99
+
+        self.eps = 0.99 #randomness
+        self.min_eps = 0.05
+        self.decay = 0.1
+
+        self.loss = tf.keras.losses.MeanSquaredError()
+        self.seed = 10
+        self.std = 0.1
+        self.mean = 0
+        #self.loss = tf.keras.losses.Huber()
+        self.metric=tf.keras.metrics.MeanSquaredError()
+        self.kern_initializer = tf.keras.initializers.RandomNormal(mean=self.mean, stddev=self.std, seed=self.seed)
+        #self.kern_initializer = tf.keras.initializers.GlorotUniform(seed = self.seed)
+        self.bias_initializer = tf.keras.initializers.Zeros()
+        self.maxmemlen = 10000
+        #self.train_interval = 20 #etapes avant entrainement (etape = 1 coup)
+        self.games_before_train = 1
+        self.allow_illegal_moves = False
+
+        #self.MIN_REPLAY_SIZE = 500
+
+        self.batch_size = 1
+        self.sample_size = 256
+    def real_randomness(self, epoch):
+         return self.min_eps + (self.eps - self.min_eps)*np.exp(-self.decay*epoch)
+
+##############################MODEL
+
+            self.model = Sequential()
+            self.model.add(layers.Conv2D(128, (4, 4), activation='relu', 
+                                         input_shape=(h, w, 1),
+                  kernel_initializer=self.hpp.kern_initializer,
+                  bias_initializer=self.hpp.bias_initializer))
+            self.model.add(layers.Flatten())
+            self.model.add(layers.Dense(units = 64, activation = 'tanh', 
+                  kernel_initializer=self.hpp.kern_initializer,
+                  bias_initializer=self.hpp.bias_initializer))
+            self.model.add(layers.Dense(units = 64, activation = 'relu', 
+                  kernel_initializer=self.hpp.kern_initializer,
+                  bias_initializer=self.hpp.bias_initializer))
+            self.model.add(layers.Dense(units = w, activation = 'linear',
+                                        kernel_initializer=self.hpp.kern_initializer,
+                                        bias_initializer=self.hpp.bias_initializer))
+
+            self.model.compile(optimizer = tf.keras.optimizers.SGD(learning_rate=self.hpp.lr), 
+                   loss = self.hpp.loss,
+                   metrics=[tf.keras.metrics.MeanSquaredError()])
+            print(self.model.summary())

@@ -1,0 +1,13 @@
+        self.h = h
+        self.w = w
+        self.game = Game(h,w) #sert uniquement pour la fonction "available moves", le vrai jeu sera dans le Trainer
+        #hyperparameters
+        self.lr = 0.1  #learning rate
+        self.gamma = 0.95 #discount factor
+        self.randomness = 0.95 #real rand = randomness/epoch
+        self.min_randomness = 0.1
+        #Q[etat][action]
+        self.Q = Q #{etat1 : {0 : val, 1 : val etc...}, etat2 : {0 : val2 etc ...}}
+        self.epoch = 1
+
+

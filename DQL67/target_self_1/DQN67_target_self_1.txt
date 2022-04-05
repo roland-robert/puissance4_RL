@@ -1,0 +1,48 @@
+50 000 entrainements, environ 550s/ pas de 1000.
+
+
+class Hyperparameters:
+    def __init__(self):
+        self.lr = 0.05
+        self.Qlr = 0
+        self.gamma = 0.95
+
+        self.eps = 0.99 #randomness
+        self.min_eps = 0.05
+        self.decay = 0.1
+
+        #self.loss = tf.keras.losses.MeanSquaredError()
+        self.loss = tf.keras.losses.Huber()
+        self.metric=tf.keras.metrics.MeanSquaredError()
+        self.optimizer = Adam(learning_rate=self.lr)
+        #self.optimizer = tf.keras.optimizers.SGD(learning_rate=self.lr)
+        
+        self.intermediate_activation = "relu"
+        self.end_activation = "linear"
+        self.maxmemlen = 20000 #memoire maxi des coups 
+        self.games_before_train = 1
+        self.games_before_sync = 20
+        self.allow_illegal_moves = False
+
+        #self.MIN_REPLAY_SIZE = 500
+        self.batch_size = 16
+        self.sample_size = 256
+    def real_randomness(self, epoch):
+         return self.min_eps + (self.eps - self.min_eps)*np.exp(-self.decay*epoch)
+
+MODEL /////////////////////////////////////////////////////////////
+            self.model = Sequential()
+            self.model.add(layers.Dense(units = 256, input_shape = (h*w,), activation = 'selu', 
+                  kernel_initializer=tf.keras.initializers.GlorotUniform(),
+                  bias_initializer=tf.keras.initializers.Zeros()))
+            self.model.add(layers.Dense(units = 128, activation = 'tanh', 
+                  kernel_initializer=tf.keras.initializers.GlorotUniform(),
+                  bias_initializer=tf.keras.initializers.Zeros()))
+            self.model.add(layers.Dense(units = 64, activation = 'relu', 
+                  kernel_initializer=tf.keras.initializers.GlorotUniform(),
+                  bias_initializer=tf.keras.initializers.Zeros()))
+            self.model.add(layers.Dense(units = w))
+        
+            self.model.compile(optimizer = self.hpp.optimizer, 
+                   loss = self.hpp.loss,
+                   metrics=[tf.keras.metrics.MeanSquaredError()])
