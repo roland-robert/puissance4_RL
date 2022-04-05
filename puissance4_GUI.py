@@ -177,13 +177,6 @@ class Interface(tk.Tk):
         self.dh = H_MAX/self.h
         #W_MAX = H_MAX * self.w/self.h
         self.dw = self.dh
-
-        #POUR LE BATCH
-        file_name = 'batch67_10000_0.pkl'
-        open_file = open(file_name, "rb")
-        self.batch = pickle.load(open_file) #le batch qui peut être parcouru
-        open_file.close()
-        self.i_batch = 0 #indice du batch à 
         
         #MCTS policy and value net
         modelP, modelV = self.get_models_MCTS_NN()
@@ -522,8 +515,8 @@ class Interface(tk.Tk):
         h = self.h
         w = self.w
         if h == 6 and w == 7:
-            modelP = tf.keras.models.load_model("policy_crossentropy367")
-            modelV = tf.keras.models.load_model("value_crossentropy367")
+            modelP = tf.keras.models.load_model("MCTS_NN/policynet67")
+            modelV = tf.keras.models.load_model("MCTS_NN/valuenet67")
         elif h == 4 and w == 4:
             modelP = 0
             modelV = 0
@@ -539,8 +532,6 @@ class Interface(tk.Tk):
         if h == 4 and w == 4:
             modelX = tf.keras.models.load_model("DQL44\Dense_bon\modelX")
             modelO = tf.keras.models.load_model("DQL44\temp44O")
-            #modelX = tf.keras.models.load_model("DQL44\Dense_2\modelX")
-            #modelO = tf.keras.models.load_model("DQL44\Dense_2\modelO")
         elif h == 6 and w == 7:
             modelX = tf.keras.models.load_model("DQL67/target_self_1/modelX")
             modelO = tf.keras.models.load_model("DQL67/target_self_1/modelO")
@@ -554,9 +545,12 @@ class Interface(tk.Tk):
         if h == 4 and w == 4:
             modelX = tf.keras.models.load_model("DQL44/CNN1/modelX")
             modelO = tf.keras.models.load_model("DQL44/CNN1/modelO")
-        else:
+        elif h ==6 and w == 7:
             modelX = tf.keras.models.load_model("DQL67/CNN_p2_4/playerX")
             modelO = tf.keras.models.load_model("DQL67/CNN_p2_4/playerO")
+        else:
+            modelX = 0
+            modelO = 0
         return modelX, modelO
 
     def get_dic_QL(self):

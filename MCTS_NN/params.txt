@@ -1,0 +1,75 @@
+class Hyperparameters:
+    def __init__(self):
+        
+        self.lr = 0.01
+        
+        #initializer for Gaussienne
+        self.seed = 10
+        self.std = 0.1
+        self.mean = 0
+        
+        #loss, initializer weight
+        #self.loss = tf.keras.losses.MeanSquaredError()
+        self.loss = tf.keras.losses.MeanSquaredError()
+        self.metric=tf.keras.metrics.MeanSquaredError()
+        self.kern_initializer = tf.keras.initializers.RandomNormal(mean=self.mean, stddev=self.std, seed=self.seed)
+        #self.kern_initializer = tf.keras.initializers.GlorotUniform(seed = self.seed)
+        self.bias_initializer = tf.keras.initializers.Zeros()
+
+        self.optimizer = tf.keras.optimizers.SGD(learning_rate=self.lr)
+
+class Policynet:
+    def __init__(self, h=6, w=7, model = 0) -> None:
+        self.h = h
+        self.w = w
+        self.hpp = Hyperparameters()
+        self.game = Game(h,w) #just for rules
+        if model == 0:
+            
+            self.model = Sequential()
+            self.model.add(layers.Conv2D(512, (4, 4), activation="selu", 
+                                         input_shape=(h, w, 3),
+                  kernel_initializer=self.hpp.kern_initializer,
+                  bias_initializer=self.hpp.bias_initializer))
+            self.model.add(layers.Flatten())
+            self.model.add(layers.Dense(units = 128, activation = 'tanh', 
+                  kernel_initializer=self.hpp.kern_initializer,
+                  bias_initializer=self.hpp.bias_initializer))
+            self.model.add(layers.Dense(units = 128, activation = 'linear', 
+                  kernel_initializer=self.hpp.kern_initializer,
+                  bias_initializer=self.hpp.bias_initializer))
+            self.model.add(layers.Dense(units = 128, activation = 'elu', 
+                  kernel_initializer=self.hpp.kern_initializer,
+                  bias_initializer=self.hpp.bias_initializer))
+            self.model.add(layers.Dense(units = w, activation = 'softmax',
+                                        kernel_initializer=self.hpp.kern_initializer,
+                                        bias_initializer=self.hpp.bias_initializer))
+
+
+class Valuenet:
+    def __init__(self, h=6, w=7, model = 0) -> None:
+        self.h = h
+        self.w = w
+        self.hpp = Hyperparameters()
+        self.game = Game(h,w) #just for rules
+        if model == 0:
+            
+            self.model = Sequential()
+            self.model.add(layers.Conv2D(512, (4, 4), activation="selu", 
+                                         input_shape=(h, w, 3),
+                  kernel_initializer=self.hpp.kern_initializer,
+                  bias_initializer=self.hpp.bias_initializer))
+            self.model.add(layers.Flatten())
+            self.model.add(layers.Dense(units = 128, activation = 'tanh', 
+                  kernel_initializer=self.hpp.kern_initializer,
+                  bias_initializer=self.hpp.bias_initializer))
+            self.model.add(layers.Dense(units = 128, activation = "linear", 
+                  kernel_initializer=self.hpp.kern_initializer,
+                  bias_initializer=self.hpp.bias_initializer))
+            self.model.add(layers.Dense(units = 128, activation = "elu",
+                  kernel_initializer=self.hpp.kern_initializer,
+                  bias_initializer=self.hpp.bias_initializer))
+
+            self.model.add(layers.Dense(units = 1, activation = 'tanh',
+                                        kernel_initializer=self.hpp.kern_initializer,
+                                        bias_initializer=self.hpp.bias_initializer))
