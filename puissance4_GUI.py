@@ -148,7 +148,7 @@ class Interface(tk.Tk):
                     padx = 0, pady = 0, bg = "white")
         labelnit.pack(side = "left")
         nit_default= tk.StringVar(self)
-        nit_default.set("10")
+        nit_default.set("4000")
         self.nit_input = tk.Spinbox(self.framenit, from_=10, to=100000,textvariable=nit_default)
         self.nit_input.pack(side = "bottom")
 
