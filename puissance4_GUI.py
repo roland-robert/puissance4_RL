@@ -530,8 +530,8 @@ class Interface(tk.Tk):
         w = self.w
         h = self.h
         if h == 4 and w == 4:
-            modelX = tf.keras.models.load_model("DQL44\Dense_bon\modelX")
-            modelO = tf.keras.models.load_model("DQL44\temp44O")
+            modelX = tf.keras.models.load_model("DQL44/Dense_bon/modelX")
+            modelO = 0
         elif h == 6 and w == 7:
             modelX = tf.keras.models.load_model("DQL67/target_self_1/modelX")
             modelO = tf.keras.models.load_model("DQL67/target_self_1/modelO")
