@@ -275,10 +275,9 @@ class MCTS_trainer:
             else:
                 move = self.get_move(game = game,NNmcts=mcts)
             winner = game.play_move(move)
-        
-
         print(winner)
         return [statelist, predlist, valuelist]
+        
     def update_weights(self, datapoints, batch_size = 1):
         #datapoints = [statelist, predlist, valuelist]
         states = np.array(datapoints[0])

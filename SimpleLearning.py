@@ -35,9 +35,9 @@ class SimpleTrainer:
                 best_moves.append(move)
       
         return rd.choice(best_moves)
-    def updateV():
+    def updateV(self):
         for state in self.Vdic.keys():
-            Vdic[state] = Vdic[state]//10
+            self.Vdic[state] = self.Vdic[state]//10
     def get_randomness(self):
         #return self.eps0
         pasacc = self.epoch//(1/self.decay)
